@@ -1,5 +1,4 @@
 # Messenger
-Web chat application
 
 ## Requirments:
 ``` sudo apt install nodejs ``` <br />
