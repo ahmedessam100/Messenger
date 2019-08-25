@@ -15,7 +15,7 @@
 
 ## To run the project :
 
-``` nodemon app.js ```
+``` npm start ```
 
 ### Register:
 
