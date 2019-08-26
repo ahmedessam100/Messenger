@@ -13,6 +13,17 @@
             height: 500px;
             padding-top: 10px;
         }
+        #onlineList{
+            float: right;
+            font-weight: bold;
+
+            text-align: center;
+            width: 25%;
+            padding-left: 200px;
+            padding-top: 72px;
+            /* list-style: none; */
+        }
+     
         body{background:skyblue; font-family: verdana; padding: 30px;}
         h1{font-size: 33px; text-transform: uppercase; letter-spacing: 2px; text-align: center;}
         input, label, textarea{display: block; margin: 10px 0; padding: 4px; width: 100%; 
@@ -22,7 +33,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 offset-md-3 col-sm-12">
+            <div class="col-md-6 offset-md-1 col-sm-12">
                 <h1 class="text-center">
                     Messenger
                     <br>
@@ -40,7 +51,10 @@
                         <textarea  id="textarea"   class="form-control" placeholder="Enter messages..."></textarea>
                 </div>
             </div>
+            <ul id="onlineList"> 
+            </ul> 
         </div>
+        
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -60,7 +74,24 @@
             // Get input message
             var input = element('textarea');
             var clear = element('clear');
+            var list = element('onlineList');
+            var online = new Set();
 
+            setInterval(function(){
+                var child = list.lastElementChild;  
+                while (child) { 
+                    list.removeChild(child); 
+                    child = list.lastElementChild; 
+                }
+                for (let u of online)
+                {
+                    var node = document.createElement("LI");
+                    var textnode = document.createTextNode(u);
+                    node.appendChild(textnode);
+                    list.appendChild(node);
+                }
+            }, 1500);
+            
             // Set status default
             var statusDefault = status.textContent;
 
@@ -89,7 +120,7 @@
                     messages.appendChild(message);
                     messages.insertBefore(message, messages.lastChild);
                     input.value = "";
-                    wh
+                    online.add(data.name);
                 });
 
                 // Get status from server
