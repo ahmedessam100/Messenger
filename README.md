@@ -1,5 +1,8 @@
 # Messenger
 
+* Web chat service that provides users to create, or join rooms. \\
+* Offensive language detection to classify negative messages.
+
 ## Requirments:
 ``` sudo apt install nodejs ``` <br />
 ``` sudo apt install npm ``` <br />
