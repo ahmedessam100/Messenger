@@ -10,7 +10,7 @@
     <title>Messenger</title>
     <style>
         #messages{   
-            height: 470px;
+            height: 500px;
             padding-top: 10px;
         }
         body{background:skyblue; font-family: verdana; padding: 30px;}
@@ -32,7 +32,7 @@
                 <div id="status"></div>
                 <div id="chat">
                     <div class="card">
-                        <div id="messages" class="card-block">
+                        <div id="messages" class="card-block" style="overflow-y: scroll">
 
                         </div>
                     </div>
@@ -73,33 +73,23 @@
                     }, 4000);
                 }
             }
-
+           
             // Connect to socket.io
             var socket = io.connect('http://localhost:5000');
-            var msgs = [];
             // Check for connection
             if(socket !== undefined){
-                
                 // Handle output
                 socket.on('output', function(data){
                     // Build out message div
-                    console.log(msgs);
-                    if(msgs.length == 16){
-                    var child = messages.lastElementChild;  
-                    while (child) { 
-                        messages.removeChild(child); 
-                        child = messages.lastElementChild; 
-                    } 
-                        msgs = []; 
-                    }
-                    msgs.push(data.message);
+                    online.add(data.name);
                     let message = document.createElement('div');
                     message.setAttribute('class', 'chat-message');
                     message.style.paddingLeft = "5px";
                     message.textContent = data.name + ": " + data.message + ' >> ' + data.polarity;
                     messages.appendChild(message);
                     messages.insertBefore(message, messages.lastChild);
-                    input.value = ""; 
+                    input.value = "";
+                    wh
                 });
 
                 // Get status from server
