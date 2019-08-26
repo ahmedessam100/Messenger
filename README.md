@@ -1,6 +1,6 @@
 # Messenger
 
-* Web chat service that provides users to create, or join rooms. \\
+* Web chat service that provides users to create, or join rooms. <br />
 * Offensive language detection to classify negative messages.
 
 ## Requirments:
