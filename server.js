@@ -11,7 +11,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 app.use(express.static(__dirname + '/node_modules'));
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
 
 server.listen(port);
 
@@ -45,7 +44,6 @@ app.post('/register',urlencodedParser, function (req, res) {
                 res.send('1');
               } else {
                 // user does not exist
-                let pass = simpleCrypto.encrypt(req.body.password);
                 users.insertOne({ name: req.body.name, email: req.body.email, password: req.body.password,
                 username: req.body.username, auth: ""}).then(() => {
                     res.send("2");
