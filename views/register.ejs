@@ -9,29 +9,29 @@
             input, label{display: block; margin: 10px 0; padding: 4px; width: 100%; 
             font-family: 'Raleway', 'Lato', Arial, sans-serif; font-size: 20px;}
             input[type='submit']{width: 103%; }
-        </style>
-    </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
         var username, email, password, name;
         // If the form is submitted
-        $("#submit").click(function(event){
+        $("#form").submit(function(event){
             event.preventDefault();
             username = $("#username").val();
             email = $("#email").val();
             password = $("#password").val();
             name = $("#name").val();
-
+            console.log(email);
             // POST request
-            $.post("/register",{name: name, email: email, password: password, username: username}, function(data){
+            $.post("https://messenger200.herokuapp.com/register", {name: name, email: email, password: password, username: username}, function(data){
+                    console.log('hii');
                     if(data === "1"){
                         alert('Username is already taken, try another one!');
-                        $.get('/register');
+                        $.get('https://messenger200.herokuapp.com/register');
                     }
                     else{
-                        window.location.assign('/login');
-                        $.get('/login');
+                        window.location.assign('https://messenger200.herokuapp.com/login');
+                        $.get('https://messenger200.herokuapp.com/login');
                     }
             });
         });
