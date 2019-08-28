@@ -11,7 +11,7 @@
             input[type='submit']{width: 103%; }
         </style>
     </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
         var email, password;
@@ -22,16 +22,16 @@
             password = $("#password").val();
 
             // POST request
-            $.post("/login",{email: email, password: password}, function(data){
+            $.post("https://messenger200.herokuapp.com/login",{email: email, password: password}, function(data){
                     if(data === "1"){
                         alert('Email or password are wrong!');                       
-                        $.get('/login'); 
+                        $.get('https://messenger200.herokuapp.com/login'); 
                     }
                     else{
                         let auth = {'uuid': data};
                         localStorage.setItem('uuid', data);
-                        window.location.assign('/chat');
-                        $.get('/chat');
+                        window.location.assign('https://messenger200.herokuapp.com/chat');
+                        $.get('https://messenger200.herokuapp.com/chat');
                     }
             });
         });
