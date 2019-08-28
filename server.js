@@ -7,16 +7,19 @@ const bodyParser = require('body-parser');
 const server = require('http').createServer(app);
 const client = require('socket.io')(server);
 const port = process.env.PORT || 5000;
+const cors = require('cors');
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 app.use(express.static(__dirname + '/node_modules'));
+app.use('/assets', express.static('stuff'));
 app.set('view engine', 'ejs');
-
+// allow cross-origin requests
+app.use(cors());
 server.listen(port);
 
 // parse incoming requests
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 var AYLIENTextAPI = require('aylien_textapi');
 var textapi = new AYLIENTextAPI({
@@ -25,14 +28,17 @@ var textapi = new AYLIENTextAPI({
 });
   
 // Handling GET request for registration
-app.get('/register', function(req, res){
+app.get('/', function(req, res){
     res.render('register', {qs: req.query});
 }); 
 
-
 // Handling POST request for registration
-app.post('/register',urlencodedParser, function (req, res) {
-    mongoose.connect('mongodb://localhost/Chatapp',{ useNewUrlParser: true }, function(err, db){
+app.post('/register', urlencodedParser, function (req, res) {
+    mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
+        if(err){
+            throw err;
+        }    
+
         if(req.body.username === '')
         {
             res.send('1');
@@ -60,7 +66,11 @@ app.get('/login', function(req, res){
 
 // Handling POST request for login
 app.post('/login',urlencodedParser, function (req, res) {
-    mongoose.connect('mongodb://localhost/Chatapp',{ useNewUrlParser: true }, function(err, db){
+    mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
+        if(err){
+            throw err;
+        }    
+
         if(req.body.email === '' || req.body.password === '')
         {
             res.send('1');
@@ -86,7 +96,7 @@ app.get('/chat', function(req, res){
     res.render('chat', {qs: req.query});
 });
 
-mongoose.connect('mongodb://localhost/Chatapp',{ useNewUrlParser: true }, function(err, db){
+mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
     if(err){
         throw err;
     }
@@ -101,6 +111,7 @@ mongoose.connect('mongodb://localhost/Chatapp',{ useNewUrlParser: true }, functi
         sendStatus = function(s){
             socket.emit('status', s);
         }
+
         // Handle input events
         socket.on('input', function(data){
             let auth = data.auth;
@@ -114,7 +125,8 @@ mongoose.connect('mongodb://localhost/Chatapp',{ useNewUrlParser: true }, functi
                 // insert message
                 chat.insertOne({ name: result.username, message: message }, function(){
                 textapi.sentiment({'text': message}, function(error, response){
-                    socket.emit('output', {name: result.username, message: message, polarity: polarity[response.polarity]});
+                    socket.broadcast.emit('output', 
+                    { name: result.username, message: message, polarity: polarity[response.polarity]} );
                 })
                 });
             }
