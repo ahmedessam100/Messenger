@@ -16,12 +16,11 @@
         #onlineList{
             float: right;
             font-weight: bold;
-
+            color: darkorange;
             text-align: center;
             width: 25%;
-            padding-left: 200px;
-            padding-top: 72px;
-            /* list-style: none; */
+            padding-right: 150px;
+            padding-top: 30px;
         }
      
         body{background:skyblue; font-family: verdana; padding: 30px;}
@@ -37,11 +36,10 @@
                 <h1 class="text-center">
                     Messenger
                     <br>
-                    
                     <button id="clear" class="btn btn-danger">Clear</button>
+                    <button id="logout" class="btn btn-danger" onclick="logout()">Logout</button>
                 </h1>
                 <div id="status"></div>
-                <div id="status1"></div>
                 <div id="chat">
                     <div class="card">
                         <div id="messages" class="card-block" style="overflow-y: scroll">
@@ -49,9 +47,10 @@
                         </div>
                     </div>
                     <br>
-                        <textarea  id="textarea"   class="form-control" placeholder="Enter messages..."></textarea>
+                        <textarea  id="textarea"   class="form-control" placeholder="Enter your message..."></textarea>
                 </div>
             </div>
+            <p style="padding-left: 50px; height: 50px">Online users:</p> 
             <ul id="onlineList"> 
             </ul> 
         </div>
@@ -61,9 +60,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script>
+        function logout(){
+            localStorage.removeItem('uuid');
+            window.location.assign('https://messenger200.herokuapp.com/login');
+        }
+    </script>
+    <script>
         (function(){
-
-
             var element = function(id){
                 return document.getElementById(id);
             }
@@ -92,7 +95,7 @@
                     node.appendChild(textnode);
                     list.appendChild(node);
                 }
-            }, 1500);
+            }, 2000);
             
             // Set status default
             var statusDefault = status.textContent;
@@ -106,25 +109,12 @@
                     }, 4000);
                 }
             }
-            
-            var setStatus1 = function(s){
-                status1.textContent = s;
-
-                if(s != statusDefault){
-                    var delay = setTimeout(function(){
-                        setStatus1(statusDefault);  
-                    }, 4000);
-                }
-            }
 
             // Connect to socket.io
             var socket = io.connect('/');
-            // var socket = io.connect('http://localhost:5000');
 
-            console.log(socket);
             // Check for connection
             if(socket !== undefined){
-
 
                 // Handle output
                 socket.on('output', function(data){
@@ -136,7 +126,7 @@
                     messages.appendChild(message);
                     messages.insertBefore(message, messages.lastChild);
                     input.value = "";
-                    online.add(data.name);
+                        online.add(data.name);
                 });
 
                 // Get status from server
