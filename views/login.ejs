@@ -24,14 +24,15 @@
             // POST request
             $.post("https://messenger200.herokuapp.com/login",{email: email, password: password}, function(data){
                     if(data === "1"){
+                        alert('Data is incomplete!');                       
+                    }
+                    else if(data === "2"){
                         alert('Email or password are wrong!');                       
-                        $.get('https://messenger200.herokuapp.com/login'); 
                     }
                     else{
                         let auth = {'uuid': data};
                         localStorage.setItem('uuid', data);
                         window.location.assign('https://messenger200.herokuapp.com/chat');
-                        $.get('https://messenger200.herokuapp.com/chat');
                     }
             });
         });
