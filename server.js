@@ -32,6 +32,7 @@ app.get('/', function(req, res){
     res.render('register', {qs: req.query});
 }); 
 
+
 // Handling POST request for registration
 app.post('/register', urlencodedParser, function (req, res) {
     mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
@@ -39,20 +40,23 @@ app.post('/register', urlencodedParser, function (req, res) {
             throw err;
         }    
 
-        if(req.body.username === '')
+        if(req.body.username === '' || req.body.email === '' || req.body.password === '' || req.body.name === '')
         {
-            res.send('1');
+            res.send('2');
+            return;
         }        
         let users = db.collection('users');
         users.findOne({ 'username': req.body.username}, function(err, user) {
               // User exist
               if (user) {
                 res.send('1');
+                return;
               } else {
                 // user does not exist
                 users.insertOne({ name: req.body.name, email: req.body.email, password: req.body.password,
                 username: req.body.username, auth: ""}).then(() => {
-                    res.send("2");
+                    res.send('3');
+                    return;
                 });                
               }
            })
@@ -74,6 +78,7 @@ app.post('/login',urlencodedParser, function (req, res) {
         if(req.body.email === '' || req.body.password === '')
         {
             res.send('1');
+            return;
         }       
         let users = db.collection('users');
         users.findOne({ 'email': req.body.email, 'password': req.body.password }, function(err, user) {
@@ -82,10 +87,12 @@ app.post('/login',urlencodedParser, function (req, res) {
                 let auth = uuid();
                 users.updateOne({'email': req.body.email}, { $set: {"auth": auth}}, function(err, result){
                     res.send(auth);
+                    return;
                 });
               } else {
                 // User Doesn't exist
-                res.send("1");
+                res.send("2");
+                return;
               }
            })
     });
@@ -127,6 +134,8 @@ mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?
                 textapi.sentiment({'text': message}, function(error, response){
                     socket.broadcast.emit('output', 
                     { name: result.username, message: message, polarity: polarity[response.polarity]} );
+                    socket.emit('output', {
+                        name: result.username, message: message, polarity: polarity[response.polarity]});
                 })
                 });
             }
