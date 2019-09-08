@@ -17,14 +17,11 @@ app.set('view engine', 'ejs');
 app.use(cors());
 server.listen(port);
 
-// parse incoming requests
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-
+// Sentiment analysis api
 var AYLIENTextAPI = require('aylien_textapi');
 var textapi = new AYLIENTextAPI({
-    application_id: "86e9b991",
-    application_key: "1b0fbc9bf94e90c21a30c853f647c74b"
+    application_id: "",
+    application_key: ""
 });
   
 // Handling GET request for registration
@@ -35,7 +32,7 @@ app.get('/', function(req, res){
 
 // Handling POST request for registration
 app.post('/register', urlencodedParser, function (req, res) {
-    mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
+    mongoose.connect('MONGO_CLUSTER_URL',{ useNewUrlParser: true }, function(err, db){
         if(err){
             throw err;
         }    
@@ -70,7 +67,7 @@ app.get('/login', function(req, res){
 
 // Handling POST request for login
 app.post('/login',urlencodedParser, function (req, res) {
-    mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
+    mongoose.connect('MONGO_CLUSTER_URL',{ useNewUrlParser: true }, function(err, db){
         if(err){
             throw err;
         }    
@@ -103,7 +100,7 @@ app.get('/chat', function(req, res){
     res.render('chat', {qs: req.query});
 });
 
-mongoose.connect('mongodb+srv://ahmed:ahmedd@cluster0-o21ut.mongodb.net/Chatapp?retryWrites=true&w=majority',{ useNewUrlParser: true }, function(err, db){
+mongoose.connect('MONGO_CLUSTER_URL',{ useNewUrlParser: true }, function(err, db){
     if(err){
         throw err;
     }
